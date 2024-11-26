@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useNavigation, useParams } from 'react-router-dom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -11,6 +11,16 @@ function DiscussQuestion() {
     const data = questions[id]
     const [messages, setMessages] = useState([])
     const [input, setInput] = useState("")
+    const messageContainer = useRef(null)
+
+    useEffect(() => {
+        if (messageContainer.current) {
+            messageContainer.current.scrollTop = messageContainer.current.scrollHeight;
+        }
+    }, [messages]);
+
+
+
     const handleChange = (e) => {
         setInput(e.target.value)
     }
@@ -25,9 +35,9 @@ function DiscussQuestion() {
         setInput('')
     }
     return (
-        <div className='pb-80'>
+        <div className='' ref={messageContainer}>
             <div>
-                <div className='text-center p-6 sticky z-10 top-0 bg-[white]'>
+                <div className='text-center p-6 sticky w-[100vw] z-10 top-0 bg-[white]'>
                     <Link to="/questions"><span className='float-left ml-4'><ArrowBackIosIcon className='' /></span></Link>
                     <span className='text-[#6e6e6e] sm:text-lg md:text-xl lg:text-2xl font-poppins font-semibold'>QUESTIONS</span>
                 </div>
@@ -41,7 +51,7 @@ function DiscussQuestion() {
                 </div>
             </div>
 
-            <div className='h-[50vh] container ml-auto mr-auto pl-4 pr-4'>
+            <div className='mb-[100px] overflow-scroll container ml-auto mr-auto pl-4 pr-4'>
                 <div className='flex gap-5 text-[#505050] font-semibold max-w-[65vw] md:max-w-[50vw] mb-2'>
                     <img src='/images/profile.jpg' className='h-[26px] w-[26px] rounded-full' />
                     <div className='flex flex-col gap-2'>
@@ -54,7 +64,7 @@ function DiscussQuestion() {
                         </div>
                     </div>
                 </div>
-                <div className='flex justify-end'>
+                <div className='flex justify-end mb-1'>
                     <div className='flex max-w-[65vw] md:max-w-[50vw] gap-5 text-[white] font-semibold'>
                         <div className='bg-[#166FF6] rounded-xl pl-2'>
                             <span className='text-[white] text-xs font-semibold'>John Doe</span>
@@ -64,12 +74,13 @@ function DiscussQuestion() {
                         <img src='/images/profile2.jpg' className='h-[36px] w-[36px] rounded-full' />
                     </div>
                 </div>
-                {messages.map((msg, idx) => <div key={idx} className='text-right'><span className='mx-w-[60vw] mr-[50px] ml-auto text-right bg-[#166FF6] rounded-lg pl-5 pr-2 text-white'>{msg}</span></div>)}
+                {messages.map((msg, idx) => <div className='flex'><div key={idx} className='inline text-left max-w-[56vw] mr-[50px] ml-auto pl-5 my-1  text-white bg-[#166FF6] rounded-lg pr-2 p-2'>{msg}</div></div>)}
             </div>
             <div className='flex w-full h-[10vh] items-center justify-between p-4 border-t bg-white border-t-[grey] fixed bottom-0'>
                 <input onKeyDown={handleKeyDown} value={input} onChange={handleChange} name='message' className='w-full mr-8 rounded-md h-[7vh] pl-3 font-poppins font-semibold text-lg' type='text' placeholder='Type a message' />
                 <button onClick={handleClick}><KeyboardArrowRightOutlinedIcon className='bg-[#166FF6]' sx={{ height: "40px", width: "40px", borderRadius: "50%", color: "white" }} /></button>
             </div>
+
         </div>
     )
 }

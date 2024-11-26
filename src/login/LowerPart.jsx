@@ -2,10 +2,12 @@ import { Button } from '@mui/material';
 import React, { useState } from 'react'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useNavigate } from 'react-router-dom';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 function LowerPart() {
-    const [passwordType, setPasswordType] = useState("password")
+    const [showPassword, setShowPassword] = useState(false)
     const [password, setPassword] = useState("")
+    const [starPassword, setStarPassword] = useState('')
     const [username, setUsername] = useState("")
     const [errors, setErrors] = useState({ username: "", password: "" })
     const navigate = useNavigate();
@@ -64,19 +66,26 @@ function LowerPart() {
                     <input name='username' value={username} onChange={(e) => { setUsername(e.target.value) }} placeholder='Username' type='text' className='w-[80vw] md:max-w-[50%] h-[7vh] rounded-3xl pl-6 border m-2 mt-3 focus:border-[#4592EC] focus:border border-[#4592EC]' />
                 </div>
                 <div className='text-center'>
-                    <input name='password' value={password} onChange={(e) => {
-                        setPassword(e.target.value)
-                    }} placeholder='Password' type={passwordType} className='relative left-[13px] w-[80vw] md:max-w-[50%] h-[7vh] rounded-3xl pl-6 border m-2 focus:border-[#4592EC] focus:border border-[#4592EC]' />
+                    <input name='password'
+                        value={showPassword ? password : starPassword}
+                        onKeyDown={(e) => {
+                            if (e.key == "Backspace" && password.length > 0) {
+                                setPassword((cur) => cur.slice(0, password.length - 1))
+                            } else {
+                                if ('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@~`#$%^&*()_+=-}{:"?><.'.includes(e.key)) {
+                                    setPassword((cur) => cur + e.key)
+                                }
+                            }
+                            setStarPassword('*'.repeat(password.length))
+                        }}
+                        placeholder='Password'
+                        type="text"
+                        className='relative left-[13px] w-[80vw] md:max-w-[50%] h-[7vh] rounded-3xl pl-6 border m-2 focus:border-[#4592EC] focus:border border-[#4592EC]' />
                     <button onClick={(e) => {
                         e.preventDefault()
-                        if (passwordType == 'text') {
-                            setPasswordType('password')
-                        }
-                        else {
-                            setPasswordType('text')
-                        }
+                        setShowPassword(!showPassword)
                     }}>
-                        <VisibilityIcon sx={{ color: '#4592EC' }} className='relative right-[40px] bottom-[4px]' />
+                        {showPassword ? <VisibilityIcon sx={{ color: '#4592EC' }} className='relative right-[40px] bottom-[4px]' /> : <VisibilityOffIcon sx={{ color: '#4592EC' }} className='relative right-[40px] bottom-[4px]' />}
                     </button>
                 </div>
                 <div className='text-center'>
